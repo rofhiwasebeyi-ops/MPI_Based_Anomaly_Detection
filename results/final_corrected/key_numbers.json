@@ -1,0 +1,28 @@
+{
+  "configurations": 96,
+  "agreement": {
+    "verified": 96,
+    "exact_matches": 96,
+    "with_mismatches": 0
+  },
+  "best_speedup": {
+    "value": 3.786,
+    "partition": "time",
+    "comm": "nonblocking",
+    "processes": 8,
+    "sensors": 500,
+    "window": 50
+  },
+  "highest_comm_share_pct": {
+    "value": 37.32,
+    "partition": "sensor",
+    "comm": "blocking",
+    "processes": 8,
+    "sensors": 50
+  },
+  "relative_comm_time_reduction_pct": {
+    "median": 24.35,
+    "min": -102.6,
+    "max": 99.82
+  }
+}

@@ -35,28 +35,28 @@ def data():
 def test_sensor_blocking_matches_sequential(comm, data):
     stream, _ = data
     expected = windowed_zscore_detect(stream, WINDOW, THRESHOLD)
-    flags, _, _, _, _ = run_sensor_partition(comm, 0, 1, stream, WINDOW, THRESHOLD, "blocking", 500)
+    flags, _, _, _, _, _, _, _ = run_sensor_partition(comm, 0, 1, stream, WINDOW, THRESHOLD, "blocking", 500)
     assert np.array_equal(flags, expected)
 
 
 def test_sensor_nonblocking_matches_sequential(comm, data):
     stream, _ = data
     expected = windowed_zscore_detect(stream, WINDOW, THRESHOLD)
-    flags, _, _, _, _ = run_sensor_partition(comm, 0, 1, stream, WINDOW, THRESHOLD, "nonblocking", 500)
+    flags, _, _, _, _, _, _, _ = run_sensor_partition(comm, 0, 1, stream, WINDOW, THRESHOLD, "nonblocking", 500)
     assert np.array_equal(flags, expected)
 
 
 def test_time_blocking_matches_sequential(comm, data):
     stream, _ = data
     expected = windowed_zscore_detect(stream, WINDOW, THRESHOLD)
-    flags, _, _, _, _ = run_time_partition(comm, 0, 1, stream, WINDOW, THRESHOLD, "blocking", 500)
+    flags, _, _, _, _, _, _, _ = run_time_partition(comm, 0, 1, stream, WINDOW, THRESHOLD, "blocking", 500)
     assert np.array_equal(flags, expected)
 
 
 def test_time_nonblocking_matches_sequential(comm, data):
     stream, _ = data
     expected = windowed_zscore_detect(stream, WINDOW, THRESHOLD)
-    flags, _, _, _, _ = run_time_partition(comm, 0, 1, stream, WINDOW, THRESHOLD, "nonblocking", 500)
+    flags, _, _, _, _, _, _, _ = run_time_partition(comm, 0, 1, stream, WINDOW, THRESHOLD, "nonblocking", 500)
     assert np.array_equal(flags, expected)
 
 
@@ -67,9 +67,9 @@ def test_nonblocking_has_overlap_eligible_compute_time(comm, data):
     to process. Blocking must report exactly 0 (no overlap is possible by
     definition)."""
     stream, _ = data
-    _, _, _, _, overlap_nonblocking = run_sensor_partition(
+    _, _, _, _, overlap_nonblocking, _, _, _ = run_sensor_partition(
         comm, 0, 1, stream, WINDOW, THRESHOLD, "nonblocking", 500)
-    _, _, _, _, overlap_blocking = run_sensor_partition(
+    _, _, _, _, overlap_blocking, _, _, _ = run_sensor_partition(
         comm, 0, 1, stream, WINDOW, THRESHOLD, "blocking", 500)
     assert overlap_nonblocking > 0
     assert overlap_blocking == 0
@@ -82,7 +82,7 @@ def test_batch_boundaries_match_unbatched_detection(comm, data):
     expected = windowed_zscore_detect(stream, WINDOW, THRESHOLD)
     # a small, deliberately-not-evenly-dividing batch size to stress the
     # lookback/trim logic at several boundary positions
-    flags, _, _, _, _ = run_sensor_partition(
+    flags, _, _, _, _, _, _, _ = run_sensor_partition(
         comm, 0, 1, stream, WINDOW, THRESHOLD, "blocking", agg_interval=137)
     assert np.array_equal(flags, expected)
 
@@ -109,5 +109,5 @@ def test_agreement_when_variance_floor_binds(comm):
     assert not expected[:, 400].any()            # sanity: floor suppresses the bump
     for fn in (run_sensor_partition, run_time_partition):
         for strategy in ("blocking", "nonblocking"):
-            flags, _, _, _, _ = fn(comm, 0, 1, stream, 24, 3.0, strategy, 97)
+            flags, _, _, _, _, _, _, _ = fn(comm, 0, 1, stream, 24, 3.0, strategy, 97)
             assert np.array_equal(flags, expected), (fn.__name__, strategy)

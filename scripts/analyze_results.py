@@ -113,7 +113,7 @@ def make_overlap_table(merged, out_path):
             "nonblocking_issue_time": n["median_comm_issue_time"],
             "nonblocking_wait_time": n["median_comm_wait_time"],
             "overlap_compute_time": n["median_overlap_compute_time"],
-            "overlap_achieved_pct": pct,
+            "relative_comm_time_reduction_pct": pct,
         })
     table = pd.DataFrame(rows)
     if table.empty:
@@ -264,10 +264,10 @@ def main():
                                    "sensors": int(worst_comm["sensors"])},
     }
     if overlap is not None and len(overlap):
-        key_numbers["overlap_achieved_pct"] = {
-            "median": round(float(overlap["overlap_achieved_pct"].median()), 2),
-            "min": round(float(overlap["overlap_achieved_pct"].min()), 2),
-            "max": round(float(overlap["overlap_achieved_pct"].max()), 2),
+        key_numbers["relative_comm_time_reduction_pct"] = {
+            "median": round(float(overlap["relative_comm_time_reduction_pct"].median()), 2),
+            "min": round(float(overlap["relative_comm_time_reduction_pct"].min()), 2),
+            "max": round(float(overlap["relative_comm_time_reduction_pct"].max()), 2),
         }
     (results_dir / "key_numbers.json").write_text(json.dumps(key_numbers, indent=2) + "\n")
     print("\nKey numbers for the paper (also written to key_numbers.json):")

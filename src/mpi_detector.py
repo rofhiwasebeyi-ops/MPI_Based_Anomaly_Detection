@@ -108,6 +108,9 @@ def process_local_stream(comm, local_data_2d, window, threshold, comm_strategy, 
     comm_issue_time = 0.0
     comm_wait_time = 0.0
     overlap_compute_time = 0.0
+    global_sum = 0.0
+    global_sumsq = 0.0
+    global_count = 0.0
 
     if owned_end is None:
         owned_end = n_cols
@@ -115,7 +118,7 @@ def process_local_stream(comm, local_data_2d, window, threshold, comm_strategy, 
     owned_length = owned_end - owned_start
 
     if owned_length <= 0:
-        return flags, compute_time, comm_issue_time, comm_wait_time, overlap_compute_time
+        return flags, compute_time, comm_issue_time, comm_wait_time, overlap_compute_time, global_sum, global_sumsq, global_count
 
     n_batches = (owned_length + agg_interval - 1) // agg_interval
 
@@ -154,16 +157,21 @@ def process_local_stream(comm, local_data_2d, window, threshold, comm_strategy, 
             req.Wait()
             comm_wait_time += time.perf_counter() - t_wait_start
 
+        # The reduction result is identical on every rank.
+        global_sum += packed_global[0]
+        global_sumsq += packed_global[1]
+        global_count += packed_global[2]
+
         flags[:, b_start:b_end] = batch_flags
 
-    return flags, compute_time, comm_issue_time, comm_wait_time, overlap_compute_time
+    return flags, compute_time, comm_issue_time, comm_wait_time, overlap_compute_time, global_sum, global_sumsq, global_count
 
 
 def run_sensor_partition(comm, rank, size, stream, window, threshold, comm_strategy,
                           agg_interval=2000):
     """Sensor-based partitioning: each rank owns a contiguous block of
     sensors and processes its full local stream through
-    process_local_stream (see above)."""
+    process_local_stream."""
     n_sensors, n_readings = stream.shape
     start, end = split_range(n_sensors, size, rank)
     local_stream = stream[start:end]
@@ -171,13 +179,13 @@ def run_sensor_partition(comm, rank, size, stream, window, threshold, comm_strat
     # with the sequential detector)
     var_floors = np.array([variance_floor(stream[i]) for i in range(start, end)])
 
-    local_flags, compute_time, comm_issue, comm_wait, overlap_compute = process_local_stream(
+    local_flags, compute_time, comm_issue, comm_wait, overlap_compute, global_sum, global_sumsq, global_count = process_local_stream(
         comm, local_stream, window, threshold, comm_strategy, agg_interval, var_floors)
 
     all_flags = comm.gather(local_flags, root=0)
     flags = np.concatenate(all_flags, axis=0) if rank == 0 else None
 
-    return flags, compute_time, comm_issue, comm_wait, overlap_compute
+    return flags, compute_time, comm_issue, comm_wait, overlap_compute, global_sum, global_sumsq, global_count
 
 
 def run_time_partition(comm, rank, size, stream, window, threshold, comm_strategy,
@@ -194,7 +202,7 @@ def run_time_partition(comm, rank, size, stream, window, threshold, comm_strateg
     local_with_halo = stream[:, halo_start:end]
     trim = start - halo_start
     var_floors = np.array([variance_floor(stream[i]) for i in range(n_sensors)])
-    flags_with_halo, compute_time, comm_issue, comm_wait, overlap_compute = process_local_stream(
+    flags_with_halo, compute_time, comm_issue, comm_wait, overlap_compute, global_sum, global_sumsq, global_count = process_local_stream(
         comm, local_with_halo, window, threshold, comm_strategy, agg_interval, var_floors,  owned_start=trim,
         owned_end=trim + (end - start))
     local_flags = flags_with_halo[:, trim:]
@@ -202,7 +210,7 @@ def run_time_partition(comm, rank, size, stream, window, threshold, comm_strateg
     all_flags = comm.gather(local_flags, root=0)
     flags = np.concatenate(all_flags, axis=1) if rank == 0 else None
 
-    return flags, compute_time, comm_issue, comm_wait, overlap_compute
+    return flags, compute_time, comm_issue, comm_wait, overlap_compute, global_sum, global_sumsq, global_count
 
 
 def main():
@@ -229,14 +237,31 @@ def main():
 
     stream, labels = generate_stream(args.sensors, args.readings, args.anomaly_rate, args.seed)
 
+    # Synchronise ranks before timing the distributed detection.
+    comm.Barrier()
     t0 = time.perf_counter()
+
     if args.partition == "sensor":
-        flags, compute_time, comm_issue, comm_wait, overlap_compute = run_sensor_partition(
+        flags, compute_time, comm_issue, comm_wait, overlap_compute, global_sum, global_sumsq, global_count = run_sensor_partition(
             comm, rank, size, stream, args.window, args.threshold, args.comm, args.agg_interval)
     else:
-        flags, compute_time, comm_issue, comm_wait, overlap_compute = run_time_partition(
+        flags, compute_time, comm_issue, comm_wait, overlap_compute, global_sum, global_sumsq, global_count = run_time_partition(
             comm, rank, size, stream, args.window, args.threshold, args.comm, args.agg_interval)
+
     t1 = time.perf_counter()
+    if rank == 0 and global_count > 0:
+        global_mean = global_sum / global_count
+        global_variance = max(
+            global_sumsq / global_count - global_mean ** 2, 0.0
+        )
+        print(
+            f"Global stream monitoring: count={int(global_count)}, "
+            f"mean={global_mean:.6f}, variance={global_variance:.6f}"
+        )
+
+    # Use the slowest rank's elapsed time as the parallel wall time.
+    local_wall_time = t1 - t0
+    wall_time = comm.reduce(local_wall_time, op=MPI.MAX, root=0)
 
     comm_time = comm_issue + comm_wait
 
@@ -249,10 +274,6 @@ def main():
     if rank == 0:
         precision, recall, tp, fp, fn = precision_recall(flags, labels)
         n_total = args.sensors * args.readings
-        wall_time = t1 - t0
-        # Throughput MUST be readings / elapsed seconds using the SAME
-        # elapsed time it is quoted against -- see sequential_baseline.py
-        # for why a mismatched denominator produces inconsistent figures.
         throughput = n_total / wall_time if wall_time > 0 else float("inf")
 
         print(f"Config: sensors={args.sensors} readings={args.readings} "

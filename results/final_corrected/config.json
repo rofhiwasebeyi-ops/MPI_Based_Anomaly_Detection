@@ -1,0 +1,33 @@
+{
+  "name": "full",
+  "partitions": [
+    "sensor",
+    "time"
+  ],
+  "comms": [
+    "blocking",
+    "nonblocking"
+  ],
+  "process_counts": [
+    1,
+    2,
+    4,
+    8
+  ],
+  "sensor_counts": [
+    50,
+    200,
+    500
+  ],
+  "readings": 10000,
+  "windows": [
+    50,
+    200
+  ],
+  "agg_interval": 2000,
+  "n_trials": 5,
+  "warmup": true,
+  "seed": 42,
+  "physical_cores_detected": 8,
+  "oversubscription_allowed": false
+}
