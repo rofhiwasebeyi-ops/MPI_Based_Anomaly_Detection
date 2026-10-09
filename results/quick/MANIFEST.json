@@ -1,0 +1,58 @@
+{
+  "config.json": {
+    "bytes": 390,
+    "sha256": "547306418fedf0331bbca0718b59fad1b71ba75f17dd2c0d7414ed80a762bdc7"
+  },
+  "environment.json": {
+    "bytes": 704,
+    "sha256": "84c4fbbc03988b8d74941bf0c5cf9dacf9e3dbd06ab0a39d6d04c0bed0e91d76"
+  },
+  "eskom_flag_counts.csv": {
+    "bytes": 1205,
+    "sha256": "bad358d3ad2c436dab2984ba296376f19a9e5e99a5632d3a1ee8d1f27ac975a8"
+  },
+  "eskom_residual_demand.png": {
+    "bytes": 113787,
+    "sha256": "4e24bc9fa180d57c04462696b7c06126ab0b4cbe5137ce5a9e87bb0d2a50d7da"
+  },
+  "eskom_summary.json": {
+    "bytes": 367,
+    "sha256": "d10bc41e478a99c5a814aa01dbbea9f27216585121fec7a20abab80eb10092f5"
+  },
+  "eskom_top_events.csv": {
+    "bytes": 4981,
+    "sha256": "59580c07a9525adac274fa8305c9825518870a50b0fdb903c0194e1094f96a82"
+  },
+  "figures/comm_compute_breakdown.png": {
+    "bytes": 47845,
+    "sha256": "524b22e5632ea7d6d6573b27ef7b289b3973587492ae34180e50484f163a211a"
+  },
+  "figures/speedup_efficiency.png": {
+    "bytes": 162250,
+    "sha256": "d9b1627f5095ce472202e895870a46a33a53d89e68d1bc7eb6fcdd1e49b8f504"
+  },
+  "key_numbers.json": {
+    "bytes": 500,
+    "sha256": "27e839a742a149367ebb9f2b390ecaa58a27c5a7bfb3b552b7fd7632bcadf510"
+  },
+  "overlap_table.csv": {
+    "bytes": 573,
+    "sha256": "bfe23e6a423c5edd484c21c9323b3fbb658533e349f93d5c45685eb5b77792f1"
+  },
+  "precision_recall_table.csv": {
+    "bytes": 493,
+    "sha256": "ecc66fe7fee737090c0dfb55cd95ce782f5a89713c3132273e26b7ac77de9c96"
+  },
+  "raw_baseline.csv": {
+    "bytes": 256,
+    "sha256": "841763025dc0824dc2e39cc3d15c60d6c0b4d8a0b7197c1b326c0026cc437859"
+  },
+  "raw_mpi.csv": {
+    "bytes": 3329,
+    "sha256": "7763ba0bbb58a3c80108eaca7bb8297f1e25926509b1f886fb174927113b3987"
+  },
+  "summary_table.csv": {
+    "bytes": 1398,
+    "sha256": "b62809859ea9c70b86ef18b3a123fcfc92e0bef51aca6395b921f300c6edc71f"
+  }
+}

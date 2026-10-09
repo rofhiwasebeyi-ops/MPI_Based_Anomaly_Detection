@@ -1,0 +1,41 @@
+series,flagged_readings,flagged_pct
+Residual Forecast,12,0.031
+RSA Contracted Forecast,0,0.0
+Dispatchable Generation,26,0.067
+Residual Demand,23,0.059
+RSA Contracted Demand,0,0.0
+International Exports,436,1.126
+International Imports,964,2.49
+Thermal Generation,648,1.674
+Nuclear Generation,466,1.204
+Eskom Gas Generation,167,0.431
+Eskom OCGT Generation,1170,3.022
+Hydro Water Generation,623,1.609
+Pumped Water Generation,464,1.199
+ILS Usage,699,1.806
+Manual Load_Reduction(MLR),295,0.762
+IOS Excl ILS and MLR,1499,3.872
+Dispatchable IPP OCGT,996,2.573
+Eskom Gas SCO,928,2.397
+Eskom OCGT SCO,967,2.498
+Hydro Water SCO,13,0.034
+Pumped Water SCO Pumping,141,0.364
+Wind,1051,2.715
+PV,61,0.158
+CSP,367,0.948
+Other RE,1909,4.931
+Total RE,159,0.411
+Wind Installed Capacity,24,0.062
+PV Installed Capacity,15,0.039
+CSP Installed Capacity,3,0.008
+Other RE Installed Capacity,0,0.0
+Total RE Installed Capacity,39,0.101
+Installed Eskom Capacity,36,0.093
+Total PCLF,2887,7.458
+Total UCLF,1285,3.319
+Total OCLF,2113,5.458
+Total UCLF+OCLF,1225,3.164
+Non Comm Sentout,454,1.173
+Drakensberg Gen Unit Hours,699,1.806
+Palmiet Gen Unit Hours,632,1.633
+Ingula Gen Unit Hours,489,1.263

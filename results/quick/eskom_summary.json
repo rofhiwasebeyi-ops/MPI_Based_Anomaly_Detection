@@ -1,0 +1,15 @@
+{
+  "replay_not_live": true,
+  "input_file": "ESK19643.csv",
+  "input_sha256": "3212b97fb7bf0f341b384f5f0e118c968c15e39f97fcc1bfe49bc1394c6d1026",
+  "series_retained": 40,
+  "readings_per_series": 38712,
+  "date_range": [
+    "2022-04-01 00:00:00",
+    "2026-08-30 23:00:00"
+  ],
+  "window": 24,
+  "threshold": 3.0,
+  "total_flagged": 23985,
+  "flagged_pct": 1.549
+}

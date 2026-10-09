@@ -88,7 +88,7 @@ def detect_batch_with_lookback(local_data_2d, b_start, b_end, window, threshold,
 
 
 def process_local_stream(comm, local_data_2d, window, threshold, comm_strategy, agg_interval,
-                         var_floors):
+                         var_floors, owned_start=0, owned_end=None):
     """
     Process local_data_2d (n_local_sensors, n_local_columns) in column
     batches of size `agg_interval`. Per batch: compute this rank's
@@ -109,16 +109,20 @@ def process_local_stream(comm, local_data_2d, window, threshold, comm_strategy, 
     comm_wait_time = 0.0
     overlap_compute_time = 0.0
 
-    if n_cols == 0:
+    if owned_end is None:
+        owned_end = n_cols
+
+    owned_length = owned_end - owned_start
+
+    if owned_length <= 0:
         return flags, compute_time, comm_issue_time, comm_wait_time, overlap_compute_time
 
-    n_batches = max(1, -(-n_cols // agg_interval))  # ceiling division
+    n_batches = (owned_length + agg_interval - 1) // agg_interval
 
     for b in range(n_batches):
-        b_start = b * agg_interval
-        b_end = min((b + 1) * agg_interval, n_cols)
-        if b_start >= b_end:
-            continue
+        b_start = owned_start + b * agg_interval
+        b_end = min(b_start + agg_interval, owned_end)
+
         batch = local_data_2d[:, b_start:b_end]
 
         local_sum = np.array([batch.sum()], dtype=np.float64)
@@ -191,7 +195,8 @@ def run_time_partition(comm, rank, size, stream, window, threshold, comm_strateg
     trim = start - halo_start
     var_floors = np.array([variance_floor(stream[i]) for i in range(n_sensors)])
     flags_with_halo, compute_time, comm_issue, comm_wait, overlap_compute = process_local_stream(
-        comm, local_with_halo, window, threshold, comm_strategy, agg_interval, var_floors)
+        comm, local_with_halo, window, threshold, comm_strategy, agg_interval, var_floors,  owned_start=trim,
+        owned_end=trim + (end - start))
     local_flags = flags_with_halo[:, trim:]
 
     all_flags = comm.gather(local_flags, root=0)

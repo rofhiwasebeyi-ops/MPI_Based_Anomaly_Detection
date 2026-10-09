@@ -138,3 +138,7 @@ Cite it as: Eskom, Eskom Data Portal, https://www.eskom.co.za/dataportal/
 decimal comma, and truncates the forecast-only tail rather than filling it.
 The Eskom file has no ground-truth labels, so the case study reports flagged
 events only; precision and recall use synthetic data with injected labels.
+
+## 10. Repository Link
+
+https://github.com/rofhiwasebeyi-ops/MPI_Based_Anomaly_Detection

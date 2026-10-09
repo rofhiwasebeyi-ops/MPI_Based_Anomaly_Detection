@@ -1,0 +1,13 @@
+partition,comm,processes,sensors,window,mean_precision,mean_recall
+sensor,blocking,1,8,50,0.755,0.744
+sensor,blocking,2,8,50,0.755,0.744
+sensor,blocking,4,8,50,0.755,0.744
+sensor,nonblocking,1,8,50,0.755,0.744
+sensor,nonblocking,2,8,50,0.755,0.744
+sensor,nonblocking,4,8,50,0.755,0.744
+time,blocking,1,8,50,0.755,0.744
+time,blocking,2,8,50,0.755,0.744
+time,blocking,4,8,50,0.755,0.744
+time,nonblocking,1,8,50,0.755,0.744
+time,nonblocking,2,8,50,0.755,0.744
+time,nonblocking,4,8,50,0.755,0.744

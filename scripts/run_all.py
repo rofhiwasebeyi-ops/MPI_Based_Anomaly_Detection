@@ -1,5 +1,5 @@
 """
-One command from raw code to every table, figure and manifest in the paper.
+One command from raw code to every tabler.
 
     python3 scripts/run_all.py --quick     # verification run 
     python3 scripts/run_all.py --full      # full experiments 
