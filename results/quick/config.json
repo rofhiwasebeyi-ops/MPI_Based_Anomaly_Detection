@@ -1,0 +1,29 @@
+{
+  "name": "quick",
+  "partitions": [
+    "sensor",
+    "time"
+  ],
+  "comms": [
+    "blocking",
+    "nonblocking"
+  ],
+  "process_counts": [
+    1,
+    2,
+    4
+  ],
+  "sensor_counts": [
+    8
+  ],
+  "readings": 10000,
+  "windows": [
+    50
+  ],
+  "agg_interval": 500,
+  "n_trials": 2,
+  "warmup": true,
+  "seed": 42,
+  "physical_cores_detected": 8,
+  "oversubscription_allowed": false
+}

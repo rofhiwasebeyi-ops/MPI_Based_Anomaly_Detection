@@ -1,0 +1,19 @@
+{
+  "recorded_utc": "2026-10-09T04:44:27+00:00",
+  "platform": "Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.43",
+  "wsl": true,
+  "python": "3.14.4",
+  "cpu_model": "AMD Ryzen 7 5700U with Radeon Graphics",
+  "logical_cores": 16,
+  "physical_cores": 8,
+  "ram_gb": 3.49,
+  "numpy": "2.3.5",
+  "pandas": "2.3.3",
+  "matplotlib": "3.10.7+dfsg1",
+  "mpi4py": "4.1.1",
+  "mpi_library": "Open MPI v5.0.10, package: Debian OpenMPI, ident: 5.0.10, repo rev: v5.0.10, Feb 23, 2026\u0000",
+  "mpirun": "--------------------------------------------------------------------------",
+  "data_files_sha256": {
+    "ESK19643.csv": "3212b97fb7bf0f341b384f5f0e118c968c15e39f97fcc1bfe49bc1394c6d1026"
+  }
+}
