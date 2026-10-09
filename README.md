@@ -24,6 +24,28 @@ oversubscribed runs are not valid scalability evidence.
 
 ## 2. Full experiments 
 
+Run the full MPI experiment sweep:
+
+```bash
+python3 scripts/run_experiments.py --full --outdir results/final_corrected
+```
+
+Analyse the recorded results and generate summary tables and figures:
+
+```bash
+python3 scripts/analyze_results.py --dir results/final_corrected
+```
+
+Run the test suite:
+
+```bash
+python3 -m pytest tests/ -v
+```
+
+The `results/final_corrected/` directory contains the raw measurements, experiment configuration, environment details, summary tables, key metrics and generated figures. The summary tables report performance across the tested partitioning strategies, communication methods, process counts and workloads.
+  
+Run everything, all scripts 
+
 ```bash
 python3 scripts/run_all.py --full                       # 96 MPI configurations, 1-8 processes
 python3 scripts/run_all.py --full --processes 1 2 4     # if you have 4 physical cores
@@ -142,25 +164,3 @@ events only; precision and recall use synthetic data with injected labels.
 ## 10. Repository Link
 
 https://github.com/rofhiwasebeyi-ops/MPI_Based_Anomaly_Detection
-
-### Reproduce the experiments
-
-Run the full MPI experiment sweep:
-
-```bash
-python3 scripts/run_experiments.py --full --outdir results/final_corrected
-```
-
-Analyse the recorded results and generate summary tables and figures:
-
-```bash
-python3 scripts/analyze_results.py --dir results/final_corrected
-```
-
-Run the test suite:
-
-```bash
-python3 -m pytest tests/ -v
-```
-
-The `results/final_corrected/` directory contains the raw measurements, experiment configuration, environment details, summary tables, key metrics and generated figures. The summary tables report performance across the tested partitioning strategies, communication methods, process counts and workloads.

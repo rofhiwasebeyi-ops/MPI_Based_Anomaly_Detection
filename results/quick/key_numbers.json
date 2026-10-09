@@ -6,23 +6,23 @@
     "with_mismatches": 0
   },
   "best_speedup": {
-    "value": 3.865,
+    "value": 2.825,
     "partition": "time",
-    "comm": "blocking",
+    "comm": "nonblocking",
     "processes": 4,
     "sensors": 8,
     "window": 50
   },
   "highest_comm_share_pct": {
-    "value": 25.75,
-    "partition": "sensor",
-    "comm": "blocking",
+    "value": 30.55,
+    "partition": "time",
+    "comm": "nonblocking",
     "processes": 4,
     "sensors": 8
   },
-  "overlap_achieved_pct": {
-    "median": 9.59,
-    "min": -62.98,
-    "max": 24.93
+  "relative_comm_time_reduction_pct": {
+    "median": -4.59,
+    "min": -29.35,
+    "max": 47.42
   }
 }
